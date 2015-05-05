@@ -14,8 +14,10 @@ For now, it needs a screenshot of android EA Scrabble © game.
 ```bash
 pip install -r requirements.txt
 apt-get install python-opencv
-python find_letters.py path/to/my/image
+bin/scrabbler path/to/my/image
 ```
+
+It prints letters only in a blank image.
 
 ### Improvments
 
