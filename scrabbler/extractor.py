@@ -7,8 +7,8 @@ It only works for a Scrabble screenshot.
 
 import numpy as np
 import cv2
-
-FEATURE_SIZE=(16,16)
+import imaging
+from matplotlib import pyplot as plt
 
 def extract_letters(im):
     """
@@ -30,8 +30,12 @@ def extract_letters(im):
         if not ((c > 20 or d > 20) and (d > 27 and d < 30) and b < 1000):
             continue
 
-        letter = letter_from_contour(contours, hierarchy, i, bounding_box)
-        letter = scale_letter(letter)
+        letter = extract_contour(contours, hierarchy, i, bounding_box)
+
+        letter = imaging.pad(letter)
+        letter = imaging.scale(letter)
+        # plt.imshow(letter, cmap=plt.cm.Greys_r)
+        # plt.show()
 
         # Compute center of letter
         center = (a + c / 2, b + d / 2)
@@ -41,7 +45,7 @@ def extract_letters(im):
     return letters
 
 
-def letter_from_contour(contours, hierarchy, i, bounding_box):
+def extract_contour(contours, hierarchy, i, bounding_box):
     """
     Extracts a letter from a (parent) contour as a new image
     """
@@ -64,13 +68,3 @@ def letter_from_contour(contours, hierarchy, i, bounding_box):
         child_id = hierarchy[0][child_id][0]
 
     return letter
-
-
-def scale_letter(letter):
-    (c,d) = letter.shape
-
-    letter = cv2.resize(letter, dsize=FEATURE_SIZE, interpolation=cv2.INTER_CUBIC)
-
-    return letter
-
-
